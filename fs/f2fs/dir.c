@@ -783,8 +783,6 @@ int f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
 	struct f2fs_dir_entry *de = NULL;
 	struct fscrypt_str de_name = FSTR_INIT(NULL, 0);
 	struct f2fs_sb_info *sbi = F2FS_I_SB(d->inode);
-	struct blk_plug plug;
-	bool readdir_ra = sbi->readdir_ra == 1;
 	int err = 0;
 
 	bit_pos = ((unsigned long)ctx->pos % d->max);
@@ -850,8 +848,6 @@ int f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
 		ctx->pos = start_pos + bit_pos;
 	}
 out:
-	if (readdir_ra)
-		blk_finish_plug(&plug);
 	return err;
 }
 
