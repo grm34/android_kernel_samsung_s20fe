@@ -8600,21 +8600,8 @@ retry:
 
 		/* Add required well known logical units to scsi mid layer */
 		ret = ufshcd_scsi_add_wlus(hba);
-		if (ret) {
-			dev_warn(hba->dev, "%s failed to add w-lus %d\n",
-				__func__, ret);
-			ret = 0;
-		}
-
-		scsi_scan_host(hba->host);
-#if defined(CONFIG_UFSFEATURE)
-		ufsf_device_check(hba);
-		ufsf_hpb_init(&hba->ufsf);
-		if (hba->ufsf.hpb_dev_info.hpb_device) {
-			ufshcd_add_hpb_info_sysfs_node(hba);
-			get_monotonic_boottime(&(hba->SEC_hpb_info.timestamp_old));
-		}
-#endif
+		if (ret)
+			goto out;
 
 		/* Initialize devfreq after UFS device is detected */
 		if (ufshcd_is_clkscaling_supported(hba)) {
