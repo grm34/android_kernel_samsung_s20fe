@@ -2845,7 +2845,52 @@ static void r8153b_ups_en(struct r8152 *tp, bool enable)
 
 	ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_POWER_CUT);
 	if (enable) {
-		ocp_data |= UPS_EN | PHASE2_EN;
+		sram_write(tp, 0x8045, 0);	/* 10M abiq&ldvbias */
+		sram_write(tp, 0x804d, 0x1222);	/* 100M short abiq&ldvbias */
+		sram_write(tp, 0x805d, 0x0022);	/* 1000M short abiq&ldvbias */
+	} else {
+		sram_write(tp, 0x8045, 0x2444);	/* 10M abiq&ldvbias */
+		sram_write(tp, 0x804d, 0x2444);	/* 100M short abiq&ldvbias */
+		sram_write(tp, 0x805d, 0x2444);	/* 1000M short abiq&ldvbias */
+	}
+
+	data = sram_read(tp, SRAM_GREEN_CFG);
+	data |= GREEN_ETH_EN;
+	sram_write(tp, SRAM_GREEN_CFG, data);
+
+	r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_GREEN, 0);
+}
+
+static u16 r8153_phy_status(struct r8152 *tp, u16 desired)
+{
+	u16 data;
+	int i;
+
+	for (i = 0; i < 500; i++) {
+		data = ocp_reg_read(tp, OCP_PHY_STATUS);
+		data &= PHY_STAT_MASK;
+		if (desired) {
+			if (data == desired)
+				break;
+		} else if (data == PHY_STAT_LAN_ON || data == PHY_STAT_PWRDN ||
+			   data == PHY_STAT_EXT_INIT) {
+			break;
+		}
+
+		msleep(20);
+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
+			break;
+	}
+
+	return data;
+}
+
+static void r8153b_ups_en(struct r8152 *tp, bool enable)
+{
+	u32 ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_POWER_CUT);
+
+	if (enable) {
+		ocp_data |= UPS_EN | USP_PREWAKE | PHASE2_EN;
 		ocp_write_byte(tp, MCU_TYPE_USB, USB_POWER_CUT, ocp_data);
 
 		ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, 0xcfff);
@@ -5842,7 +5887,10 @@ static void r8153_init(struct r8152 *tp)
 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
 		    AUTOLOAD_DONE)
 			break;
+
 		msleep(20);
+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
+			break;
 	}
 
 	for (i = 0; i < 500; i++) {
@@ -5970,7 +6018,10 @@ static void r8153b_init(struct r8152 *tp)
 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
 		    AUTOLOAD_DONE)
 			break;
+
 		msleep(20);
+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
+			break;
 	}
 
 	for (i = 0; i < 500; i++) {
