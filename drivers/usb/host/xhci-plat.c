@@ -830,16 +830,15 @@ static int __maybe_unused xhci_plat_resume(struct device *dev)
 	if (ret)
 		return ret;
 
-	if (is_rewa_enabled == 1) {
-		/* Disable SS ReWA */
-		phy_vendor_set(xhci->shared_hcd->phy, 1, 1);
-		/* Disablee HS ReWA */
-		phy_vendor_set(xhci->main_hcd->phy, 1, 1);
-		phy_vendor_set(xhci->main_hcd->phy, 0, 0);
-		is_rewa_enabled = 0;
-	}
+	ret = xhci_resume(xhci, 0);
+	if (ret)
+		return ret;
 
-	return xhci_resume(xhci, 0);
+	pm_runtime_disable(dev);
+	pm_runtime_set_active(dev);
+	pm_runtime_enable(dev);
+
+	return 0;
 }
 
 static int __maybe_unused xhci_plat_runtime_suspend(struct device *dev)
