@@ -1772,186 +1772,296 @@
 		phandle = <0x2f>;
 	};
 
-	__symbols__ {
-		cpu_atlas0 = "/cpus/cpu@0";
-		cpu_atlas1 = "/cpus/cpu@1";
-		cpu_atlas2 = "/cpus/cpu@2";
-		cpu_atlas3 = "/cpus/cpu@3";
-		soc = "/soc";
-		fin_pll = "/soc/xxti";
-		gic = "/soc/interrupt-controller@11001000";
-		pdma0 = "/soc/amba/pdma@10e10000";
-		pdma1 = "/soc/amba/pdma@10eb0000";
-		clock_topc = "/soc/clock-controller@10570000";
-		clock_top0 = "/soc/clock-controller@105d0000";
-		clock_top1 = "/soc/clock-controller@105e0000";
-		clock_ccore = "/soc/clock-controller@105b0000";
-		clock_peric0 = "/soc/clock-controller@13610000";
-		clock_peric1 = "/soc/clock-controller@14c80000";
-		clock_peris = "/soc/clock-controller@10040000";
-		clock_fsys0 = "/soc/clock-controller@10e90000";
-		clock_fsys1 = "/soc/clock-controller@156e0000";
-		serial_0 = "/soc/serial@13630000";
-		serial_1 = "/soc/serial@14c20000";
-		serial_2 = "/soc/serial@14c30000";
-		serial_3 = "/soc/serial@14c40000";
-		pinctrl_alive = "/soc/pinctrl@10580000";
-		gpa0 = "/soc/pinctrl@10580000/gpa0";
-		gpa1 = "/soc/pinctrl@10580000/gpa1";
-		gpa2 = "/soc/pinctrl@10580000/gpa2";
-		gpa3 = "/soc/pinctrl@10580000/gpa3";
-		pmic_irq = "/soc/pinctrl@10580000/pmic-irq";
-		pinctrl_bus0 = "/soc/pinctrl@13470000";
-		gpb0 = "/soc/pinctrl@13470000/gpb0";
-		gpc0 = "/soc/pinctrl@13470000/gpc0";
-		gpc1 = "/soc/pinctrl@13470000/gpc1";
-		gpc2 = "/soc/pinctrl@13470000/gpc2";
-		gpc3 = "/soc/pinctrl@13470000/gpc3";
-		gpd0 = "/soc/pinctrl@13470000/gpd0";
-		gpd1 = "/soc/pinctrl@13470000/gpd1";
-		gpd2 = "/soc/pinctrl@13470000/gpd2";
-		gpd4 = "/soc/pinctrl@13470000/gpd4";
-		gpd5 = "/soc/pinctrl@13470000/gpd5";
-		gpd6 = "/soc/pinctrl@13470000/gpd6";
-		gpd7 = "/soc/pinctrl@13470000/gpd7";
-		gpd8 = "/soc/pinctrl@13470000/gpd8";
-		gpg0 = "/soc/pinctrl@13470000/gpg0";
-		gpg3 = "/soc/pinctrl@13470000/gpg3";
-		hs_i2c10_bus = "/soc/pinctrl@13470000/hs-i2c10-bus";
-		hs_i2c11_bus = "/soc/pinctrl@13470000/hs-i2c11-bus";
-		hs_i2c2_bus = "/soc/pinctrl@13470000/hs-i2c2-bus";
-		uart0_data = "/soc/pinctrl@13470000/uart0-data";
-		uart0_fctl = "/soc/pinctrl@13470000/uart0-fctl";
-		uart2_data = "/soc/pinctrl@13470000/uart2-data";
-		hs_i2c3_bus = "/soc/pinctrl@13470000/hs-i2c3-bus";
-		uart1_data = "/soc/pinctrl@13470000/uart1-data";
-		uart1_fctl = "/soc/pinctrl@13470000/uart1-fctl";
-		hs_i2c0_bus = "/soc/pinctrl@13470000/hs-i2c0-bus";
-		hs_i2c1_bus = "/soc/pinctrl@13470000/hs-i2c1-bus";
-		hs_i2c9_bus = "/soc/pinctrl@13470000/hs-i2c9-bus";
-		pwm0_out = "/soc/pinctrl@13470000/pwm0-out";
-		pwm1_out = "/soc/pinctrl@13470000/pwm1-out";
-		pwm2_out = "/soc/pinctrl@13470000/pwm2-out";
-		pwm3_out = "/soc/pinctrl@13470000/pwm3-out";
-		hs_i2c8_bus = "/soc/pinctrl@13470000/hs-i2c8-bus";
-		uart3_data = "/soc/pinctrl@13470000/uart3-data";
-		spi2_bus = "/soc/pinctrl@13470000/spi2-bus";
-		spi1_bus = "/soc/pinctrl@13470000/spi1-bus";
-		spi0_bus = "/soc/pinctrl@13470000/spi0-bus";
-		hs_i2c4_bus = "/soc/pinctrl@13470000/hs-i2c4-bus";
-		hs_i2c5_bus = "/soc/pinctrl@13470000/hs-i2c5-bus";
-		pinctrl_nfc = "/soc/pinctrl@14cd0000";
-		gpj0 = "/soc/pinctrl@14cd0000/gpj0";
-		hs_i2c6_bus = "/soc/pinctrl@14cd0000/hs-i2c6-bus";
-		pinctrl_touch = "/soc/pinctrl@14ce0000";
-		gpj1 = "/soc/pinctrl@14ce0000/gpj1";
-		hs_i2c7_bus = "/soc/pinctrl@14ce0000/hs-i2c7-bus";
-		pinctrl_ff = "/soc/pinctrl@14c90000";
-		gpg4 = "/soc/pinctrl@14c90000/gpg4";
-		spi3_bus = "/soc/pinctrl@14c90000/spi3-bus";
-		pinctrl_ese = "/soc/pinctrl@14ca0000";
-		gpv7 = "/soc/pinctrl@14ca0000/gpv7";
-		spi4_bus = "/soc/pinctrl@14ca0000/spi4-bus";
-		pinctrl_fsys0 = "/soc/pinctrl@10e60000";
-		gpr4 = "/soc/pinctrl@10e60000/gpr4";
-		sd2_clk = "/soc/pinctrl@10e60000/sd2-clk";
-		sd2_cmd = "/soc/pinctrl@10e60000/sd2-cmd";
-		sd2_cd = "/soc/pinctrl@10e60000/sd2-cd";
-		sd2_bus1 = "/soc/pinctrl@10e60000/sd2-bus-width1";
-		sd2_bus4 = "/soc/pinctrl@10e60000/sd2-bus-width4";
-		pinctrl_fsys1 = "/soc/pinctrl@15690000";
-		gpr0 = "/soc/pinctrl@15690000/gpr0";
-		gpr1 = "/soc/pinctrl@15690000/gpr1";
-		gpr2 = "/soc/pinctrl@15690000/gpr2";
-		gpr3 = "/soc/pinctrl@15690000/gpr3";
-		sd0_clk = "/soc/pinctrl@15690000/sd0-clk";
-		sd0_cmd = "/soc/pinctrl@15690000/sd0-cmd";
-		sd0_ds = "/soc/pinctrl@15690000/sd0-ds";
-		sd0_qrdy = "/soc/pinctrl@15690000/sd0-qrdy";
-		sd0_bus1 = "/soc/pinctrl@15690000/sd0-bus-width1";
-		sd0_bus4 = "/soc/pinctrl@15690000/sd0-bus-width4";
-		sd0_bus8 = "/soc/pinctrl@15690000/sd0-bus-width8";
-		sd1_clk = "/soc/pinctrl@15690000/sd1-clk";
-		sd1_cmd = "/soc/pinctrl@15690000/sd1-cmd";
-		sd1_ds = "/soc/pinctrl@15690000/sd1-ds";
-		sd1_qrdy = "/soc/pinctrl@15690000/sd1-qrdy";
-		sd1_int = "/soc/pinctrl@15690000/sd1-int";
-		sd1_bus1 = "/soc/pinctrl@15690000/sd1-bus-width1";
-		sd1_bus4 = "/soc/pinctrl@15690000/sd1-bus-width4";
-		sd1_bus8 = "/soc/pinctrl@15690000/sd1-bus-width8";
-		pinctrl_bus1 = "/soc/pinctrl@14870000";
-		gpf0 = "/soc/pinctrl@14870000/gpf0";
-		gpf1 = "/soc/pinctrl@14870000/gpf1";
-		gpf2 = "/soc/pinctrl@14870000/gpf2";
-		gpf3 = "/soc/pinctrl@14870000/gpf3";
-		gpf4 = "/soc/pinctrl@14870000/gpf4";
-		gpf5 = "/soc/pinctrl@14870000/gpf5";
-		gpg1 = "/soc/pinctrl@14870000/gpg1";
-		gpg2 = "/soc/pinctrl@14870000/gpg2";
-		gph1 = "/soc/pinctrl@14870000/gph1";
-		gpv6 = "/soc/pinctrl@14870000/gpv6";
-		spi5_bus = "/soc/pinctrl@14870000/spi5-bus";
-		ufs_refclk_out = "/soc/pinctrl@14870000/ufs-refclk-out";
-		ufs_rst_n = "/soc/pinctrl@14870000/ufs-rst-n";
-		usb30_vbus_en = "/soc/pinctrl@14870000/usb30-vbus-en";
-		usb3drd_boost_en = "/soc/pinctrl@14870000/usb3drd-boost-en";
-		hsi2c_0 = "/soc/hsi2c@13640000";
-		hsi2c_1 = "/soc/hsi2c@13650000";
-		hsi2c_2 = "/soc/hsi2c@14e60000";
-		hsi2c_3 = "/soc/hsi2c@14e70000";
-		hsi2c_4 = "/soc/hsi2c@13660000";
-		s2mps15_osc = "/soc/hsi2c@13660000/s2mps15_pmic@66/clocks";
-		ldo1_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO1";
-		ldo2_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO2";
-		ldo3_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO3";
-		ldo4_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO4";
-		ldo5_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO5";
-		ldo6_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO6";
-		ldo7_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO7";
-		ldo8_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO8";
-		ldo9_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO9";
-		ldo10_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO10";
-		ldo11_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO11";
-		ldo12_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO12";
-		ldo13_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO13";
-		ldo14_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO14";
-		ldo17_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO17";
-		ldo18_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO18";
-		ldo19_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO19";
-		ldo21_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO21";
-		ldo23_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO23";
-		ldo25_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO25";
-		ldo26_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO26";
-		ldo27_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/LDO27";
-		buck1_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/BUCK1";
-		buck2_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/BUCK2";
-		buck4_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/BUCK4";
-		buck5_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/BUCK5";
-		buck6_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/BUCK6";
-		buck7_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/BUCK7";
-		buck8_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/BUCK8";
-		buck9_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/BUCK9";
-		buck10_reg = "/soc/hsi2c@13660000/s2mps15_pmic@66/regulators/BUCK10";
-		hsi2c_5 = "/soc/hsi2c@13670000";
-		hsi2c_6 = "/soc/hsi2c@14e00000";
-		hsi2c_7 = "/soc/hsi2c@13e10000";
-		hsi2c_8 = "/soc/hsi2c@14e20000";
-		hsi2c_9 = "/soc/hsi2c@13680000";
-		hsi2c_10 = "/soc/hsi2c@13690000";
-		hsi2c_11 = "/soc/hsi2c@136a0000";
-		pmu_system_controller = "/soc/system-controller@105c0000";
-		reboot = "/soc/system-controller@105c0000/syscon-reboot";
-		rtc = "/soc/rtc@10590000";
-		watchdog = "/soc/watchdog@101d0000";
-		mmc_0 = "/soc/mmc@15740000";
-		mmc_1 = "/soc/mmc@15750000";
-		mmc_2 = "/soc/mmc@15560000";
-		adc = "/soc/adc@13620000";
-		pwm = "/soc/pwm@136c0000";
-		tmuctrl_0 = "/soc/tmu@10060000";
-		atlas_thermal = "/soc/thermal-zones/cluster0-thermal";
-		usbdrd_phy = "/soc/phy@15500000";
-		usb30_vbus_reg = "/regulator-usb30";
-		usb3drd_boost_5v = "/regulator-usb3drd-boost";
+};
+
+&fin_pll {
+	clock-frequency = <24000000>;
+};
+
+&serial_2 {
+	status = "okay";
+};
+
+&rtc {
+	status = "okay";
+	clocks = <&clock_ccore PCLK_RTC>, <&s2mps15_osc S2MPS11_CLK_AP>;
+	clock-names = "rtc", "rtc_src";
+};
+
+&watchdog {
+	status = "okay";
+};
+
+&adc {
+	status = "okay";
+};
+
+&hsi2c_4 {
+	samsung,i2c-sda-delay = <100>;
+	samsung,i2c-max-bus-freq = <200000>;
+	status = "okay";
+
+	s2mps15_pmic@66 {
+		compatible = "samsung,s2mps15-pmic";
+		reg = <0x66>;
+		interrupts = <2 IRQ_TYPE_NONE>;
+		interrupt-parent = <&gpa0>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pmic_irq>;
+		wakeup-source;
+
+		s2mps15_osc: clocks {
+			compatible = "samsung,s2mps13-clk";
+			#clock-cells = <1>;
+			clock-output-names = "s2mps13_ap", "s2mps13_cp",
+				"s2mps13_bt";
+		};
+
+		regulators {
+			ldo1_reg: LDO1 {
+				regulator-name = "vdd_ldo1";
+				regulator-min-microvolt = <500000>;
+				regulator-max-microvolt = <900000>;
+				regulator-always-on;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo2_reg: LDO2 {
+				regulator-name = "vqmmc-sdcard";
+				regulator-min-microvolt = <1620000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-always-on;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo3_reg: LDO3 {
+				regulator-name = "vdd_ldo3";
+				regulator-min-microvolt = <1620000>;
+				regulator-max-microvolt = <1980000>;
+				regulator-always-on;
+				regulator-boot-on;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo4_reg: LDO4 {
+				regulator-name = "vdd_ldo4";
+				regulator-min-microvolt = <800000>;
+				regulator-max-microvolt = <1110000>;
+				regulator-always-on;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo5_reg: LDO5 {
+				regulator-name = "vdd_ldo5";
+				regulator-min-microvolt = <1620000>;
+				regulator-max-microvolt = <1980000>;
+				regulator-always-on;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo6_reg: LDO6 {
+				regulator-name = "vdd_ldo6";
+				regulator-min-microvolt = <2250000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo7_reg: LDO7 {
+				regulator-name = "vdd_ldo7";
+				regulator-min-microvolt = <700000>;
+				regulator-max-microvolt = <1150000>;
+				regulator-enable-ramp-delay = <125>;
+				regulator-always-on;
+			};
+
+			ldo8_reg: LDO8 {
+				regulator-name = "vdd_ldo8";
+				regulator-min-microvolt = <700000>;
+				regulator-max-microvolt = <1000000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo9_reg: LDO9 {
+				regulator-name = "vdd_ldo9";
+				regulator-min-microvolt = <700000>;
+				regulator-max-microvolt = <1000000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo10_reg: LDO10 {
+				regulator-name = "vdd_ldo10";
+				regulator-min-microvolt = <700000>;
+				regulator-max-microvolt = <1000000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo11_reg: LDO11 {
+				regulator-name = "vdd_ldo11";
+				regulator-min-microvolt = <1000000>;
+				regulator-max-microvolt = <1300000>;
+				regulator-always-on;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo12_reg: LDO12 {
+				regulator-name = "vdd_ldo12";
+				regulator-min-microvolt = <1000000>;
+				regulator-max-microvolt = <1300000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo13_reg: LDO13 {
+				regulator-name = "vdd_ldo13";
+				regulator-min-microvolt = <1000000>;
+				regulator-max-microvolt = <1300000>;
+				regulator-always-on;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo14_reg: LDO14 {
+				regulator-name = "vdd_ldo14";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3375000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo17_reg: LDO17 {
+				regulator-name = "vmmc-sdcard";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3375000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo18_reg: LDO18 {
+				regulator-name = "vdd_ldo18";
+				regulator-min-microvolt = <1500000>;
+				regulator-max-microvolt = <2275000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo19_reg: LDO19 {
+				regulator-name = "vdd_ldo19";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3375000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo21_reg: LDO21 {
+				regulator-name = "vdd_ldo21";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3375000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo23_reg: LDO23 {
+				regulator-name = "vdd_ldo23";
+				regulator-min-microvolt = <1500000>;
+				regulator-max-microvolt = <2275000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo25_reg: LDO25 {
+				regulator-name = "vdd_ldo25";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <3375000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo26_reg: LDO26 {
+				regulator-name = "vdd_ldo26";
+				regulator-min-microvolt = <700000>;
+				regulator-max-microvolt = <1470000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			ldo27_reg: LDO27 {
+				regulator-name = "vdd_ldo27";
+				regulator-min-microvolt = <1500000>;
+				regulator-max-microvolt = <2275000>;
+				regulator-enable-ramp-delay = <125>;
+			};
+
+			buck1_reg: BUCK1 {
+				regulator-name = "vdd_mif";
+				regulator-min-microvolt = <500000>;
+				regulator-max-microvolt = <1200000>;
+				regulator-always-on;
+				regulator-boot-on;
+				regulator-ramp-delay = <25000>;
+				regulator-enable-ramp-delay = <250>;
+			};
+
+			buck2_reg: BUCK2 {
+				regulator-name = "vdd_atlas";
+				regulator-min-microvolt = <500000>;
+				regulator-max-microvolt = <1200000>;
+				regulator-always-on;
+				regulator-boot-on;
+				regulator-ramp-delay = <12500>;
+				regulator-enable-ramp-delay = <250>;
+			};
+
+			buck4_reg: BUCK4 {
+				regulator-name = "vdd_int";
+				regulator-min-microvolt = <500000>;
+				regulator-max-microvolt = <1200000>;
+				regulator-always-on;
+				regulator-boot-on;
+				regulator-ramp-delay = <12500>;
+				regulator-enable-ramp-delay = <250>;
+			};
+
+			buck5_reg: BUCK5 {
+				regulator-name = "vdd_buck5";
+				regulator-min-microvolt = <500000>;
+				regulator-max-microvolt = <1300000>;
+				regulator-ramp-delay = <25000>;
+				regulator-enable-ramp-delay = <250>;
+			};
+
+			buck6_reg: BUCK6 {
+				regulator-name = "vdd_g3d";
+				regulator-min-microvolt = <500000>;
+				regulator-max-microvolt = <1400000>;
+				regulator-ramp-delay = <12500>;
+				regulator-enable-ramp-delay = <250>;
+			};
+
+			buck7_reg: BUCK7 {
+				regulator-name = "vdd_buck7";
+				regulator-min-microvolt = <1000000>;
+				regulator-max-microvolt = <1500000>;
+				regulator-always-on;
+				regulator-ramp-delay = <25000>;
+				regulator-enable-ramp-delay = <250>;
+			};
+
+			buck8_reg: BUCK8 {
+				regulator-name = "vdd_buck8";
+				regulator-min-microvolt = <1000000>;
+				regulator-max-microvolt = <1500000>;
+				regulator-always-on;
+				regulator-ramp-delay = <25000>;
+				regulator-enable-ramp-delay = <250>;
+			};
+
+			buck9_reg: BUCK9 {
+				regulator-name = "vdd_buck9";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <2100000>;
+				regulator-always-on;
+				regulator-ramp-delay = <25000>;
+				regulator-enable-ramp-delay = <250>;
+			};
+
+			buck10_reg: BUCK10 {
+				regulator-name = "vdd_buck10";
+				regulator-min-microvolt = <1000000>;
+				regulator-max-microvolt = <3000000>;
+				regulator-always-on;
+				regulator-ramp-delay = <25000>;
+				regulator-enable-ramp-delay = <250>;
+			};
+		};
 	};
 };
