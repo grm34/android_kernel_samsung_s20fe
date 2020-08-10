@@ -1770,19 +1770,24 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
 		ourport->tx_irq = ret + 1;
 	}
 
-	ret = platform_get_irq(platdev, 1);
-	if (ret > 0)
-		ourport->tx_irq = ret;
-
-	if (of_get_property(platdev->dev.of_node,
-			"samsung,separate-uart-clk", NULL))
-		ourport->check_separated_clk = 1;
-	else
-		ourport->check_separated_clk = 0;
-
-	if (of_property_read_u32(platdev->dev.of_node, "samsung,source-clock-rate", &ourport->src_clk_rate)){
-		dev_err(&platdev->dev, "No explicit src-clk. Use default src-clk\n");
-		ourport->src_clk_rate = DEFAULT_SOURCE_CLK;
+	if (!s3c24xx_serial_has_interrupt_mask(port)) {
+		ret = platform_get_irq(platdev, 1);
+		if (ret > 0)
+			ourport->tx_irq = ret;
+	}
+	/*
+	 * DMA is currently supported only on DT platforms, if DMA properties
+	 * are specified.
+	 */
+	if (platdev->dev.of_node && of_find_property(platdev->dev.of_node,
+						     "dmas", NULL)) {
+		ourport->dma = devm_kzalloc(port->dev,
+					    sizeof(*ourport->dma),
+					    GFP_KERNEL);
+		if (!ourport->dma) {
+			ret = -ENOMEM;
+			goto err;
+		}
 	}
 
 	snprintf(clkname, sizeof(clkname), "ipclk_uart%d", ourport->port.line);
