@@ -1021,17 +1021,10 @@ try_transfer:
 		sdd->state &= ~RXBUSY;
 		sdd->state &= ~TXBUSY;
 
-		if (cs->cs_mode == AUTO_CS_MODE) {
-			/* Slave Select */
-			enable_cs(sdd, spi);
+		/* Start the signals */
+		s3c64xx_spi_set_cs(spi, true);
 
-			enable_datapath(sdd, spi, xfer, use_dma);
-		} else {
-			enable_datapath(sdd, spi, xfer, use_dma);
-
-			/* Slave Select */
-			enable_cs(sdd, spi);
-		}
+		s3c64xx_enable_datapath(sdd, xfer, use_dma);
 
 		spin_unlock_irqrestore(&sdd->lock, flags);
 
