@@ -236,7 +236,57 @@ static int ktd2692_parse_dt(struct device *dev,
 		return -1;
 	}
 
-	ret = of_property_read_u32(dnode, "torch_current_value", &(pdata->torch_current_value));
+	cfg->max_brightness = offset;
+}
+
+static void ktd2692_init_flash_timeout(struct led_classdev_flash *fled_cdev,
+				       struct ktd2692_led_config_data *cfg)
+{
+	struct led_flash_setting *setting;
+
+	setting = &fled_cdev->timeout;
+	setting->min = KTD2692_FLASH_MODE_TIMEOUT_DISABLE;
+	setting->max = cfg->flash_max_timeout;
+	setting->step = cfg->flash_max_timeout
+			/ (KTD2692_FLASH_MODE_TIMEOUT_LEVELS - 1);
+	setting->val = cfg->flash_max_timeout;
+}
+
+static void ktd2692_setup(struct ktd2692_context *led)
+{
+	led->mode = KTD2692_MODE_DISABLE;
+	ktd2692_expresswire_reset(led);
+	gpiod_direction_output(led->aux_gpio, KTD2692_LOW);
+
+	ktd2692_expresswire_write(led, (KTD2962_MM_MIN_CURR_THRESHOLD_SCALE - 1)
+				 | KTD2692_REG_MM_MIN_CURR_THRESHOLD_BASE);
+	ktd2692_expresswire_write(led, KTD2692_FLASH_MODE_CURR_PERCENT(45)
+				 | KTD2692_REG_FLASH_CURRENT_BASE);
+}
+
+static void regulator_disable_action(void *_data)
+{
+	struct device *dev = _data;
+	struct ktd2692_context *led = dev_get_drvdata(dev);
+	int ret;
+
+	ret = regulator_disable(led->regulator);
+	if (ret)
+		dev_err(dev, "Failed to disable supply: %d\n", ret);
+}
+
+static int ktd2692_parse_dt(struct ktd2692_context *led, struct device *dev,
+			    struct ktd2692_led_config_data *cfg)
+{
+	struct device_node *np = dev->of_node;
+	struct device_node *child_node;
+	int ret;
+
+	if (!dev->of_node)
+		return -ENXIO;
+
+	led->ctrl_gpio = devm_gpiod_get(dev, "ctrl", GPIOD_ASIS);
+	ret = PTR_ERR_OR_ZERO(led->ctrl_gpio);
 	if (ret) {
 		pr_info("%s failed to get a torch_current_value\n", __func__);
 	}  
@@ -246,7 +296,33 @@ static int ktd2692_parse_dt(struct device *dev,
 		pr_info("%s failed to get a factory_torch_current_value\n", __func__);
 	}
 
-	ret = of_property_read_u32_array(dnode, "torch_table", pdata->torch_table, TORCH_STEP);
+	led->regulator = devm_regulator_get(dev, "vin");
+	if (IS_ERR(led->regulator))
+		led->regulator = NULL;
+
+	if (led->regulator) {
+		ret = regulator_enable(led->regulator);
+		if (ret) {
+			dev_err(dev, "Failed to enable supply: %d\n", ret);
+		} else {
+			ret = devm_add_action_or_reset(dev,
+						regulator_disable_action, dev);
+			if (ret)
+				return ret;
+		}
+	}
+
+	child_node = of_get_next_available_child(np, NULL);
+	if (!child_node) {
+		dev_err(dev, "No DT child node found for connected LED.\n");
+		return -EINVAL;
+	}
+
+	led->fled_cdev.led_cdev.name =
+		of_get_property(child_node, "label", NULL) ? : child_node->name;
+
+	ret = of_property_read_u32(child_node, "led-max-microamp",
+				   &cfg->movie_max_microamp);
 	if (ret) {
 		pr_info("%s failed to get torch_table\n", __func__);
 	}
@@ -349,17 +425,12 @@ static void ktd2692_shutdown(struct device *dev)
 //static int __devexit ktd2692_remove(struct platform_device *pdev)
 static int ktd2692_remove(struct platform_device *pdev)
 {
-#ifdef CONFIG_LEDS_KTD2692_MULTI_TORCH_REAR3
-	if (camera_flash_dev) {
-		device_remove_file(camera_flash_dev, &dev_attr_rear_flash3);
-	}
-#else
-	if (camera_flash_dev) {
-		device_remove_file(camera_flash_dev, &dev_attr_rear_flash);
-	}
-	device_destroy(camera_class, 0);
-	class_destroy(camera_class);
-#endif
+	struct ktd2692_context *led = platform_get_drvdata(pdev);
+
+	led_classdev_flash_unregister(&led->fled_cdev);
+
+	mutex_destroy(&led->lock);
+
 	return 0;
 }
 
