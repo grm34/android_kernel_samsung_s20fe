@@ -1461,105 +1461,7 @@ static int vb2_start_streaming(struct vb2_queue *q)
 static void __qbuf_work(struct kthread_work *work)
 {
 	struct vb2_buffer *vb;
-	struct vb2_queue *q;
-	unsigned long flags;
-
-	vb = container_of(work, struct vb2_buffer, qbuf_work);
-
-	spin_lock_irqsave(&vb->fence_cb_lock, flags);
-	if (!vb->in_fence) {
-		spin_unlock_irqrestore(&vb->fence_cb_lock, flags);
-		return;
-	}
-	del_timer(&vb->fence_timer);
-	/*
-	 * If the fence signals with an error we mark the buffer as such
-	 * and avoid using it by setting it to VB2_BUF_STATE_ERROR and
-	 * not queueing it to the driver. However we can't notify the error
-	 * to userspace right now because, at the time this callback run, QBUF
-	 * returned already.
-	 * So we delay that to DQBUF time. See comments in vb2_buffer_done()
-	 * as well.
-	 */
-	if (vb->in_fence->error)
-		vb->state = VB2_BUF_STATE_ERROR;
-
-	dma_fence_put(vb->in_fence);
-	vb->in_fence = NULL;
-
-	spin_unlock_irqrestore(&vb->fence_cb_lock, flags);
-	
-
-	q = vb->vb2_queue;
-
-	if (q->start_streaming_called && (vb->state == VB2_BUF_STATE_QUEUED ||
-					  vb->state == VB2_BUF_STATE_ERROR))
-		__enqueue_in_driver(vb);
-}
-
-static void vb2_qbuf_fence_cb(struct dma_fence *f, struct dma_fence_cb *cb)
-{
-	struct vb2_buffer *vb = container_of(cb, struct vb2_buffer, fence_cb);
-	int ret;
-
-	del_timer(&vb->fence_timer);
-
-	ret = kthread_queue_work(vb->qbuf_workq, &vb->qbuf_work);
-	if (!ret)
-		pr_err("%s : the work is already queued\n", __func__);
-}
-
-#define VB2_FENCE_TIMEOUT		(1000)
-static void vb2_fence_timeout_handler(struct timer_list *t)
-{
-	struct vb2_buffer *vb = from_timer(vb, t, fence_timer);
-	struct dma_fence *fence;
-	unsigned long flags;
-	char name[32];
-	int ret;
-
-	pr_err("%s: fence callback is not called during %d ms\n",
-					__func__, VB2_FENCE_TIMEOUT);
-	spin_lock_irqsave(&vb->fence_cb_lock, flags);
-	if (!vb->in_fence) {
-		spin_unlock_irqrestore(&vb->fence_cb_lock, flags);
-		return;
-	}
-
-	fence = vb->in_fence;
-	if (fence) {
-		strlcpy(name, fence->ops->get_driver_name(fence),
-				sizeof(name));
-		pr_err("%s: vb2 in-fence: %s #%d (%s), error: %d\n",
-				__func__, name, fence->seqno,
-				dma_fence_is_signaled(fence) ?
-				"signaled" : "active", fence->error);
-
-		dma_fence_remove_callback(vb->in_fence, &vb->fence_cb);
-		/*
-		 * set fence as error, then vb->state will become error
-		 * in __qbuf_work(). Remained process like dma_fence_put()
-		 * is also handled in __qbuf_work().
-		 */
-		dma_fence_set_error(vb->in_fence, -EFAULT);
-	}
-
-	fence = vb->out_fence;
-	if (fence)
-		pr_err("%s: vb2 out-fence: #%d\n", __func__, fence->seqno);
-
-	spin_unlock_irqrestore(&vb->fence_cb_lock, flags);
-
-	ret = kthread_queue_work(vb->qbuf_workq, &vb->qbuf_work);
-	if (!ret)
-		pr_err("%s : the work is already queued\n", __func__);
-}
-
-int vb2_core_qbuf(struct vb2_queue *q, unsigned int index, void *pb,
-		  struct dma_fence *in_fence)
-{
-	struct vb2_buffer *vb;
-	unsigned long flags;
+	enum vb2_buffer_state orig_state;
 	int ret;
 
 	if (q->error) {
@@ -1591,6 +1493,7 @@ int vb2_core_qbuf(struct vb2_queue *q, unsigned int index, void *pb,
 	 * Add to the queued buffers list, a buffer will stay on it until
 	 * dequeued in dqbuf.
 	 */
+	orig_state = vb->state;
 	list_add_tail(&vb->queued_entry, &q->queued_list);
 	q->queued_count++;
 	q->waiting_for_buffers = false;
@@ -1671,17 +1574,17 @@ int vb2_core_qbuf(struct vb2_queue *q, unsigned int index, void *pb,
 	if (q->streaming && !q->start_streaming_called &&
 	    __get_num_ready_buffers(q) >= q->min_buffers_needed) {
 		ret = vb2_start_streaming(q);
-		if (ret)
-			goto err;
-	}
-
-	/* Fill buffer information for the userspace */
-	if (pb)
-		call_void_bufop(q, fill_user_buffer, vb, pb);
-
-	if (vb->out_fence) {
-		fd_install(vb->out_fence_fd, vb->sync_file->file);
-		vb->sync_file = NULL;
+		if (ret) {
+			/*
+			 * Since vb2_core_qbuf will return with an error,
+			 * we should return it to state DEQUEUED since
+			 * the error indicates that the buffer wasn't queued.
+			 */
+			list_del(&vb->queued_entry);
+			q->queued_count--;
+			vb->state = orig_state;
+			return ret;
+		}
 	}
 
 	dprintk(2, "qbuf of buffer %d succeeded\n", vb->index);
