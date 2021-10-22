@@ -896,10 +896,28 @@ static void dw_mci_exynos_set_sample(struct dw_mci *host, u32 sample, bool tunin
 	else
 		sample_path_sel_dis(host, AXI_BURST_LEN);
 
-	if (priv->ctrl_flag & DW_MMC_EXYNOS_ENABLE_SHIFT)
-		dw_mci_exynos_set_enable_shift(host, sample, false);
-	if (!tuning)
-		dw_mci_set_quirk_endbit(host, clksel);
+	for (i = 0; i < iter; i++) {
+		__c = ror8(candiates, i);
+		if ((__c & 0x83) == 0x83) {
+			loc = i;
+			goto out;
+		}
+	}
+
+	/*
+	 * If there is no cadiates value, then it needs to return -EIO.
+	 * If there are candiates values and don't find bset clk sample value,
+	 * then use a first candiates clock sample value.
+	 */
+	for (i = 0; i < iter; i++) {
+		__c = ror8(candiates, i);
+		if ((__c & 0x1) == 0x1) {
+			loc = i;
+			goto out;
+		}
+	}
+out:
+	return loc;
 }
 
 static void dw_mci_set_fine_tuning_bit(struct dw_mci *host, bool is_fine_tuning)
@@ -1236,6 +1254,8 @@ static int dw_mci_exynos_execute_tuning(struct dw_mci_slot *slot, u32 opcode,
 		mci_writel(host, CDTHRCTL, 0 << 16 | 0);
 		dw_mci_exynos_set_sample(host, orig_sample, false);
 		ret = -EIO;
+		dev_warn(&mmc->class_dev,
+			"There is no candiates value about clksmpl!\n");
 	}
 
 	if (!bypass)
